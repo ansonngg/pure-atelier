@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include "PCH.h"
 
 namespace DirectXECS::ECS {
 class Entity {

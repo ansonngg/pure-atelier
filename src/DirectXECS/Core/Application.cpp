@@ -1,11 +1,8 @@
 #include "Application.h"
 
-// System headers
-#include <cassert>
-
 // Local headers
-#include "Util/Helper.h"
 #include "WindowProc.h"
+#include "Util/Helper.h"
 
 using Microsoft::WRL::ComPtr;
 
@@ -134,8 +131,8 @@ void Application::CreateWindow_(
 }
 
 void Application::CreateDevice_(bool useWarp) {
-    ComPtr<IDXGIAdapter4> dxgiAdapter = GetAdapter_(useWarp);
-    Util::ThrowIfFailed(D3D12CreateDevice(dxgiAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&d3d12Device_)));
+    ComPtr<IDXGIAdapter4> adapter = GetAdapter_(useWarp);
+    Util::ThrowIfFailed(D3D12CreateDevice(adapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&d3d12Device_)));
 
     // Enable debug messages in debug mode.
 #ifdef _DEBUG
@@ -177,7 +174,7 @@ void Application::CreateCommandQueues_() {
 }
 
 ComPtr<IDXGIAdapter4> Application::GetAdapter_(bool useWarp) {
-    ComPtr<IDXGIFactory4> dxgiFactory;
+    ComPtr<IDXGIFactory4> factory;
     UINT createFactoryFlags;
 
 #ifdef _DEBUG
@@ -186,33 +183,31 @@ ComPtr<IDXGIAdapter4> Application::GetAdapter_(bool useWarp) {
     createFactoryFlags = 0;
 #endif // _DEBUG
 
-    Util::ThrowIfFailed(CreateDXGIFactory2(createFactoryFlags, IID_PPV_ARGS(&dxgiFactory)));
+    Util::ThrowIfFailed(CreateDXGIFactory2(createFactoryFlags, IID_PPV_ARGS(&factory)));
 
-    ComPtr<IDXGIAdapter1> dxgiAdapter1;
-    ComPtr<IDXGIAdapter4> dxgiAdapter4;
+    ComPtr<IDXGIAdapter1> adapter1;
+    ComPtr<IDXGIAdapter4> adapter4;
 
     if (useWarp) {
-        Util::ThrowIfFailed(dxgiFactory->EnumWarpAdapter(IID_PPV_ARGS(&dxgiAdapter1)));
-        Util::ThrowIfFailed(dxgiAdapter1.As(&dxgiAdapter4));
+        Util::ThrowIfFailed(factory->EnumWarpAdapter(IID_PPV_ARGS(&adapter1)));
+        Util::ThrowIfFailed(adapter1.As(&adapter4));
     } else {
         SIZE_T maxDedicatedVideoMemory = 0;
 
-        for (UINT i = 0; dxgiFactory->EnumAdapters1(i, &dxgiAdapter1) != DXGI_ERROR_NOT_FOUND; ++i) {
+        for (UINT i = 0; factory->EnumAdapters1(i, &adapter1) != DXGI_ERROR_NOT_FOUND; ++i) {
             DXGI_ADAPTER_DESC1 dxgiAdapterDesc1;
-            dxgiAdapter1->GetDesc1(&dxgiAdapterDesc1);
+            adapter1->GetDesc1(&dxgiAdapterDesc1);
 
             // Pick the adapter with the largest dedicated video memory
             if ((dxgiAdapterDesc1.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) == 0
-                && SUCCEEDED(
-                    D3D12CreateDevice(dxgiAdapter1.Get(), D3D_FEATURE_LEVEL_11_0, __uuidof(ID3D12Device), nullptr)
-                )
+                && SUCCEEDED(D3D12CreateDevice(adapter1.Get(), D3D_FEATURE_LEVEL_11_0, __uuidof(ID3D12Device), nullptr))
                 && dxgiAdapterDesc1.DedicatedVideoMemory > maxDedicatedVideoMemory) {
                 maxDedicatedVideoMemory = dxgiAdapterDesc1.DedicatedVideoMemory;
-                Util::ThrowIfFailed(dxgiAdapter1.As(&dxgiAdapter4));
+                Util::ThrowIfFailed(adapter1.As(&adapter4));
             }
         }
     }
 
-    return dxgiAdapter4;
+    return adapter4;
 }
 }

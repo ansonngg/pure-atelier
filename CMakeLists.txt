@@ -20,3 +20,5 @@ target_link_libraries(
     Microsoft::DirectX-Guids
     Microsoft::DirectX-Headers
 )
+
+target_precompile_headers(${CMAKE_PROJECT_NAME} PRIVATE src/DirectXECS/PCH.h)

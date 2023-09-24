@@ -1,13 +1,7 @@
 #pragma once
 
-// System headers
-#include "Util/WRLWrapper.h"
-#include <memory>
-#include <string>
-
-// DirectX 12 headers
-#include "directx/d3d12.h"
-#include <dxgi1_6.h>
+// Precompiled header
+#include "PCH.h"
 
 // Local headers
 #include "CommandQueue.h"

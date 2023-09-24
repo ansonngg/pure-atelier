@@ -1,12 +1,7 @@
 #pragma once
 
-// System headers
-#include "Util/WRLWrapper.h"
-#include <cstdint>
-
-// DirectX 12 headers
-#include "directx/d3d12.h"
-#include <dxgi1_6.h>
+// Precompiled header
+#include "PCH.h"
 
 // Local headers
 #include "Clock.h"

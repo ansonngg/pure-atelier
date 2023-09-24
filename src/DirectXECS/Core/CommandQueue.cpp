@@ -1,8 +1,5 @@
 #include "CommandQueue.h"
 
-// System headers
-#include <cassert>
-
 // Local headers
 #include "Application.h"
 #include "Util/Helper.h"
@@ -95,9 +92,11 @@ void CommandQueue::CreateCommandQueue_() {
 }
 
 void CommandQueue::CreateFence_() {
-    Util::ThrowIfFailed(Application::GetInstance()
-                            .GetD3D12Device()
-                            ->CreateFence(fenceValue_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&d3d12Fence_)));
+    Util::ThrowIfFailed(Application::GetInstance().GetD3D12Device()->CreateFence(
+        fenceValue_,
+        D3D12_FENCE_FLAG_NONE,
+        IID_PPV_ARGS(&d3d12Fence_)
+    ));
     fenceEvent_ = ::CreateEvent(nullptr, FALSE, FALSE, nullptr);
     assert(fenceEvent_ && "Failed to create fence event handle.");
 }

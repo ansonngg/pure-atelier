@@ -1,6 +1,6 @@
 #pragma once
 
-#include <winerror.h>
+#include "PCH.h"
 
 namespace DirectXECS::Util {
 void ThrowIfFailed(HRESULT hr);

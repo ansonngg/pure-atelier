@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Util/WindowsWrapper.h"
+#include "PCH.h"
 
 namespace DirectXECS::Core {
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

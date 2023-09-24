@@ -1,13 +1,6 @@
 #pragma once
 
-// System headers
-#include "Util/WRLWrapper.h"
-#include <cstdint>
-#include <queue>
-#include <utility>
-
-// DirectX 12 headers
-#include "directx/d3d12.h"
+#include "PCH.h"
 
 namespace DirectXECS::Core {
 class CommandQueue {

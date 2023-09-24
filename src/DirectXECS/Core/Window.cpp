@@ -1,8 +1,5 @@
 #include "Window.h"
 
-// DirectX 12 headers
-#include "directx/d3dx12.h"
-
 // Local headers
 #include "Application.h"
 #include "Util/Helper.h"
@@ -27,7 +24,7 @@ void Window::Start() {
 }
 
 void Window::Destroy() {
-    DestroyWindow(windowHandle_);
+    ::DestroyWindow(windowHandle_);
     windowHandle_ = nullptr;
 }
 
@@ -98,8 +95,8 @@ void Window::Resize(uint32_t width, uint32_t height) {
     clientHeight_ = std::max(1u, height);
     Application::GetInstance().Flush();
 
-    for (auto &d3d12BackBuffer : d3d12BackBuffers_) {
-        d3d12BackBuffer.Reset();
+    for (auto &backBuffer : d3d12BackBuffers_) {
+        backBuffer.Reset();
     }
 
     DXGI_SWAP_CHAIN_DESC swapChainDesc{};
@@ -117,7 +114,7 @@ void Window::Resize(uint32_t width, uint32_t height) {
 }
 
 void Window::CreateSwapChain_(bool isTearingSupported) {
-    ComPtr<IDXGIFactory4> dxgiFactory4;
+    ComPtr<IDXGIFactory4> factory;
     UINT createFactoryFlags;
 
 #ifdef _DEBUG
@@ -126,7 +123,7 @@ void Window::CreateSwapChain_(bool isTearingSupported) {
     createFactoryFlags = 0;
 #endif // _DEBUG
 
-    Util::ThrowIfFailed(CreateDXGIFactory2(createFactoryFlags, IID_PPV_ARGS(&dxgiFactory4)));
+    Util::ThrowIfFailed(CreateDXGIFactory2(createFactoryFlags, IID_PPV_ARGS(&factory)));
 
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {
         .Width = clientWidth_,
@@ -146,11 +143,11 @@ void Window::CreateSwapChain_(bool isTearingSupported) {
         Application::GetInstance().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_DIRECT)->GetD3D12CommandQueue().Get();
     ComPtr<IDXGISwapChain1> swapChain1;
     Util::ThrowIfFailed(
-        dxgiFactory4->CreateSwapChainForHwnd(commandQueue, windowHandle_, &swapChainDesc, nullptr, nullptr, &swapChain1)
+        factory->CreateSwapChainForHwnd(commandQueue, windowHandle_, &swapChainDesc, nullptr, nullptr, &swapChain1)
     );
 
     // Disable the Alt+Enter fullscreen toggle feature
-    Util::ThrowIfFailed(dxgiFactory4->MakeWindowAssociation(windowHandle_, DXGI_MWA_NO_ALT_ENTER));
+    Util::ThrowIfFailed(factory->MakeWindowAssociation(windowHandle_, DXGI_MWA_NO_ALT_ENTER));
 
     Util::ThrowIfFailed(swapChain1.As(&dxgiSwapChain_));
     currentBackBufferIndex_ = dxgiSwapChain_->GetCurrentBackBufferIndex();

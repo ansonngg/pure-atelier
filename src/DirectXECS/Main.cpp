@@ -1,9 +1,5 @@
-// Prerequisite headers
-#include "Util/WindowsWrapper.h"
-
-// System headers
-#include <shellapi.h>
-#include <string>
+// Precompiled header
+#include "PCH.h"
 
 // Local headers
 #include "Core/Application.h"
