@@ -1,7 +1,7 @@
 #include "WindowProc.h"
 
-// Local headers
 #include "Application.h"
+#include "Window.h"
 
 namespace DirectXECS::Core {
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {

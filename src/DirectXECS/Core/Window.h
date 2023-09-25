@@ -1,9 +1,5 @@
 #pragma once
 
-// Precompiled header
-#include "PCH.h"
-
-// Local headers
 #include "Clock.h"
 #include "Controller.h"
 

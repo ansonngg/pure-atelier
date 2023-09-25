@@ -1,6 +1,5 @@
 #include "CommandQueue.h"
 
-// Local headers
 #include "Application.h"
 #include "Util/Helper.h"
 

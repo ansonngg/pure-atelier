@@ -1,6 +1,7 @@
 #include "Application.h"
 
-// Local headers
+#include "CommandQueue.h"
+#include "Window.h"
 #include "WindowProc.h"
 #include "Util/Helper.h"
 

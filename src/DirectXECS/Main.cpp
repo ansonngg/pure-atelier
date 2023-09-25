@@ -1,7 +1,3 @@
-// Precompiled header
-#include "PCH.h"
-
-// Local headers
 #include "Core/Application.h"
 
 namespace DirectXECS {

@@ -1,7 +1,7 @@
 #include "Window.h"
 
-// Local headers
 #include "Application.h"
+#include "CommandQueue.h"
 #include "Util/Helper.h"
 
 using Microsoft::WRL::ComPtr;

@@ -11,6 +11,8 @@ add_executable(${CMAKE_PROJECT_NAME} WIN32 ${SOURCE_FILES})
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE src/DirectXECS)
 
+target_precompile_headers(${CMAKE_PROJECT_NAME} PRIVATE src/DirectXECS/PCH.h)
+
 target_link_libraries(
     ${CMAKE_PROJECT_NAME} PRIVATE
     d3d12.lib
@@ -20,5 +22,3 @@ target_link_libraries(
     Microsoft::DirectX-Guids
     Microsoft::DirectX-Headers
 )
-
-target_precompile_headers(${CMAKE_PROJECT_NAME} PRIVATE src/DirectXECS/PCH.h)

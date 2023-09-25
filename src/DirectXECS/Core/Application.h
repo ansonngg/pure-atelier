@@ -1,13 +1,9 @@
 #pragma once
 
-// Precompiled header
-#include "PCH.h"
-
-// Local headers
-#include "CommandQueue.h"
-#include "Window.h"
-
 namespace DirectXECS::Core {
+class CommandQueue;
+class Window;
+
 class Application {
 public:
     Application(const Application &) = delete;
