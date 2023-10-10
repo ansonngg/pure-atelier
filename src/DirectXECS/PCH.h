@@ -12,7 +12,10 @@
 #include <exception>
 #include <memory>
 #include <queue>
+#include <unordered_map>
+#include <unordered_set>
 #include <utility>
+#include <vector>
 
 // Windows SDK headers
 #include <shellapi.h>

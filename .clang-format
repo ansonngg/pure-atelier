@@ -58,6 +58,7 @@ PackConstructorInitializers: CurrentLine
 PenaltyBreakBeforeFirstCallParameter: 0
 PointerAlignment: Right
 ReflowComments: false
+RequiresClausePosition: SingleLine
 SortIncludes: CaseInsensitive
 SpaceAfterCStyleCast: false
 SpaceAfterLogicalNot: false
