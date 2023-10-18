@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "CommandQueue.h"
 #include "Util/Helper.h"
+#include "Util/Logger.h"
 
 using Microsoft::WRL::ComPtr;
 
@@ -30,7 +31,9 @@ void Window::Destroy() {
 
 void Window::Update() {
     clock_.Tick();
-    controller_.Update(clock_.GetDeltaSecond(), clock_.GetTotalSecond());
+    double deltaSecond = clock_.GetDeltaSecond();
+    CalculateFPS_(deltaSecond);
+    controller_.Update(deltaSecond, clock_.GetTotalSecond());
     Render_();
 }
 
@@ -180,6 +183,18 @@ void Window::UpdateRenderTargetViews_() {
         device->CreateRenderTargetView(backBuffer.Get(), nullptr, rtvHandle);
         d3d12BackBuffers_[i] = backBuffer;
         rtvHandle.Offset((INT)rtvDescriptorSize_);
+    }
+}
+
+void Window::CalculateFPS_(double deltaSecond) {
+    deltaTimeFromLastSecond_ += deltaSecond;
+    ++frameCountInSecond_;
+
+    if (deltaTimeFromLastSecond_ >= 1) {
+        int fps = std::lround(frameCountInSecond_ / deltaTimeFromLastSecond_);
+        Util::Logger::Info("FPS: " + std::to_string(fps));
+        deltaTimeFromLastSecond_ = 0;
+        frameCountInSecond_ = 0;
     }
 }
 

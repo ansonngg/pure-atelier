@@ -35,12 +35,15 @@ private:
 
     Clock clock_;
     Controller controller_;
+    double deltaTimeFromLastSecond_ = 0;
+    uint32_t frameCountInSecond_ = 0;
 
     void CreateSwapChain_(bool isTearingSupported);
     void CreateDescriptorHeap_();
     void UpdatePresentArgs_(bool isTearingSupported, bool useVsync);
     void UpdateRenderTargetViews_();
 
+    void CalculateFPS_(double deltaSecond);
     void Render_();
     void TransitionCurrentBackBuffer_(
         const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList2> &commandList,

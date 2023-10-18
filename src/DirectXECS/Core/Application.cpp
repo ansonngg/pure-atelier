@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "WindowProc.h"
 #include "Util/Helper.h"
+#include "Util/Logger.h"
 
 using Microsoft::WRL::ComPtr;
 
@@ -54,6 +55,7 @@ void Application::Init(
     CreateDevice_(useWarp);
     CreateCommandQueues_();
     CreateWindow_(hInstance, windowName, clientWidth, clientHeight, useVsync);
+    Util::Logger::Init();
     isInitialized_ = true;
 }
 

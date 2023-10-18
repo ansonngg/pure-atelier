@@ -2,10 +2,10 @@
 
 #include "Entity.h"
 
-namespace DirectXECS::ECS {
-Component::Component(const std::shared_ptr<Entity> &entity) : entity_(entity) {}
-
+namespace DirectXECS::ECSCore {
 Entity *Component::GetEntity() const {
     return entity_.lock().get();
 }
+
+Component::Component(const std::shared_ptr<Entity> &entity) : entity_(entity) {}
 }

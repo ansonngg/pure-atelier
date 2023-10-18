@@ -3,11 +3,16 @@ project(DirectXECS)
 
 set(CMAKE_CXX_STANDARD 20)
 
-find_package(directx-headers CONFIG REQUIRED)
+find_package(directx-headers REQUIRED)
+find_package(spdlog REQUIRED)
 
 file(GLOB_RECURSE SOURCE_FILES src/*.cpp src/*.h)
 
-add_executable(${CMAKE_PROJECT_NAME} WIN32 ${SOURCE_FILES})
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
+else ()
+    add_executable(${CMAKE_PROJECT_NAME} WIN32 ${SOURCE_FILES})
+endif (CMAKE_BUILD_TYPE MATCHES Debug)
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE src/DirectXECS)
 
@@ -21,4 +26,5 @@ target_link_libraries(
     dxguid.lib
     Microsoft::DirectX-Guids
     Microsoft::DirectX-Headers
+    spdlog::spdlog
 )

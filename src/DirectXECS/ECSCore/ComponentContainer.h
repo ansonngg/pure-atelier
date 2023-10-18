@@ -1,6 +1,6 @@
 #pragma once
 
-namespace DirectXECS::ECS {
+namespace DirectXECS::ECSCore {
 class Component;
 
 class AbstractComponentContainer {};

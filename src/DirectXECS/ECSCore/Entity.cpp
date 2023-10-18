@@ -2,7 +2,7 @@
 
 #include "Scene.h"
 
-namespace DirectXECS::ECS {
+namespace DirectXECS::ECSCore {
 Entity::Entity(const std::shared_ptr<Scene> &scene, uint32_t id) : scene_(scene), id_(id) {}
 
 uint32_t Entity::GetId() const {

@@ -5,7 +5,7 @@
 #include "Entity.h"
 #include "System.h"
 
-namespace DirectXECS::ECS {
+namespace DirectXECS::ECSCore {
 void Scene::Update(double deltaSecond, double totalSecond) {
     for (auto &system : systems_) {
         system->Update(deltaSecond, totalSecond);
@@ -51,7 +51,7 @@ ComponentType *Scene::CreateComponent(std::shared_ptr<Entity> entity, Args &&...
 
     // If the entity has already had the same component
     if (itToInsert->GetEntity()->GetId() == entity->GetId()) {
-        return nullptr;
+        return &*itToInsert;
     }
 
     // Insert the new component right before the one that has an owner of larger id
