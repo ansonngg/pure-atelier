@@ -37,8 +37,8 @@ void Window::Update()
 {
     clock_.Tick();
     double deltaSecond = clock_.GetDeltaSecond();
-    CalculateFPS_(deltaSecond);
-    controller_.Update(deltaSecond, clock_.GetTotalSecond());
+    CalculateFps(deltaSecond);
+    controller_.Update(deltaSecond);
     Render_();
 }
 
@@ -205,7 +205,7 @@ void Window::UpdateRenderTargetViews_()
     }
 }
 
-void Window::CalculateFPS_(double deltaSecond)
+void Window::CalculateFps(double deltaSecond)
 {
     deltaTimeFromLastSecond_ += deltaSecond;
     ++frameCountInSecond_;

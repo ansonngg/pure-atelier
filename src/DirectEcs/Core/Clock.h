@@ -6,14 +6,14 @@ class Clock
 {
 public:
     double GetDeltaSecond();
-    double GetTotalSecond();
+    [[maybe_unused]] double GetTotalSecond();
 
     void Init();
     void Tick();
 
 private:
-    std::chrono::high_resolution_clock::time_point initialTime_;
-    std::chrono::high_resolution_clock::duration deltaTime_{};
-    std::chrono::high_resolution_clock::duration totalTime_{};
+    std::chrono::high_resolution_clock::time_point m_InitialTime;
+    std::chrono::high_resolution_clock::duration m_DeltaTime{};
+    std::chrono::high_resolution_clock::duration m_TotalTime{};
 };
 }

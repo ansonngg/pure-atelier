@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ECSCore/Component.h"
+#include "Scene/Component.h"
 
 namespace DirectEcs
 {

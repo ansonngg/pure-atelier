@@ -1,4 +1,4 @@
-#include "System.h"
+#include "ISystem.h"
 
 namespace DirectEcs
 {

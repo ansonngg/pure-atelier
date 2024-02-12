@@ -45,7 +45,7 @@ private:
     void UpdatePresentArgs_(bool isTearingSupported, bool useVsync);
     void UpdateRenderTargetViews_();
 
-    void CalculateFPS_(double deltaSecond);
+    void CalculateFps(double deltaSecond);
     void Render_();
     void TransitionCurrentBackBuffer_(
         const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList2>& commandList,

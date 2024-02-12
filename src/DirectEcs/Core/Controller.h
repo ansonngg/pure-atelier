@@ -5,6 +5,6 @@ namespace DirectEcs
 class Controller
 {
 public:
-    void Update(double deltaSecond, double totalSecond);
+    void Update(double deltaSecond);
 };
 }

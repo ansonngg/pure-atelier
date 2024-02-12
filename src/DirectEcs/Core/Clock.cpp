@@ -6,25 +6,25 @@ namespace DirectEcs
 {
 double Clock::GetDeltaSecond()
 {
-    return (double)deltaTime_.count() * 1e-9;
+    return (double)m_DeltaTime.count() * 1e-9;
 }
 
-double Clock::GetTotalSecond()
+[[maybe_unused]] double Clock::GetTotalSecond()
 {
-    return (double)totalTime_.count() * 1e-9;
+    return (double)m_TotalTime.count() * 1e-9;
 }
 
 void Clock::Init()
 {
-    initialTime_ = high_resolution_clock::now();
-    deltaTime_ = high_resolution_clock::duration();
-    totalTime_ = high_resolution_clock::duration();
+    m_InitialTime = high_resolution_clock::now();
+    m_DeltaTime = high_resolution_clock::duration();
+    m_TotalTime = high_resolution_clock::duration();
 }
 
 void Clock::Tick()
 {
-    high_resolution_clock::duration oldTotalTime = totalTime_;
-    totalTime_ = high_resolution_clock::now() - initialTime_;
-    deltaTime_ = totalTime_ - oldTotalTime;
+    high_resolution_clock::duration oldTotalTime = m_TotalTime;
+    m_TotalTime = high_resolution_clock::now() - m_InitialTime;
+    m_DeltaTime = m_TotalTime - oldTotalTime;
 }
 }

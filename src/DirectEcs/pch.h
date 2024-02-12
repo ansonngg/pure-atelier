@@ -12,6 +12,7 @@
 #include <exception>
 #include <memory>
 #include <queue>
+#include <typeindex>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
