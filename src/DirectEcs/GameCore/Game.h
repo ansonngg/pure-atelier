@@ -2,7 +2,7 @@
 
 namespace DirectEcs
 {
-class Controller
+class Game
 {
 public:
     void Update(double deltaSecond);

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Clock.h"
-#include "Controller.h"
+#include "GameCore/Game.h"
 
 namespace DirectEcs
 {
@@ -36,7 +36,7 @@ private:
     UINT presentFlags_{};
 
     Clock clock_;
-    Controller controller_;
+    Game m_Game;
     double deltaTimeFromLastSecond_ = 0;
     uint32_t frameCountInSecond_ = 0;
 

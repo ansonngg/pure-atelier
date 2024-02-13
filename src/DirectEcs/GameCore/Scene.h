@@ -6,7 +6,6 @@
 
 namespace DirectEcs
 {
-class Component;
 class Entity;
 class ISystem;
 
@@ -15,10 +14,6 @@ class Scene : public std::enable_shared_from_this<Scene>
 public:
     void Update(double deltaSecond);
     std::shared_ptr<Entity> CreateEntity();
-    template<typename ComponentType, typename... Args>
-    ComponentType& CreateComponent(std::shared_ptr<Entity> entity, Args&& ...args);
-    template<typename ComponentType>
-    void RemoveComponent(const std::shared_ptr<Entity>& entity);
 
 private:
     std::unordered_map<std::shared_ptr<Entity>, std::unordered_map<std::type_index, size_t>> m_EntityToComponentMap;
@@ -26,8 +21,14 @@ private:
     std::vector<std::unique_ptr<ISystem>> m_Systems;
     uint32_t m_NextEntityId = 0;
 
+    template<typename ComponentType, typename... Args>
+    ComponentType& CreateComponent(std::shared_ptr<Entity> entity, Args&& ...args);
+    template<typename ComponentType>
+    void RemoveComponent(const std::shared_ptr<Entity>& entity);
     template<typename ComponentType>
     ComponentContainer<ComponentType>& GetOrCreateComponentContainer() const;
+
+    friend Entity;
 };
 
 template<typename ComponentType, typename... Args>

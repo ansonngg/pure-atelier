@@ -38,7 +38,7 @@ void Window::Update()
     clock_.Tick();
     double deltaSecond = clock_.GetDeltaSecond();
     CalculateFps(deltaSecond);
-    controller_.Update(deltaSecond);
+    m_Game.Update(deltaSecond);
     Render_();
 }
 

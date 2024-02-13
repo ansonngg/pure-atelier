@@ -2,9 +2,7 @@
 
 namespace DirectEcs
 {
-MeshComponent::MeshComponent(const std::shared_ptr<Entity>& entity, const std::shared_ptr<Mesh>& mesh)
-    : Component(entity)
-    , mesh_(mesh)
+MeshComponent::MeshComponent(const std::shared_ptr<Mesh>& mesh) : mesh_(mesh)
 {
 }
 }

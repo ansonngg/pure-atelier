@@ -1,15 +1,13 @@
 #pragma once
 
-#include "Scene/Component.h"
-
 namespace DirectEcs
 {
 class Mesh;
 
-class MeshComponent : public Component
+class MeshComponent
 {
 public:
-    MeshComponent(const std::shared_ptr<Entity>& entity, const std::shared_ptr<Mesh>& mesh);
+    explicit MeshComponent(const std::shared_ptr<Mesh>& mesh);
 
 private:
     std::shared_ptr<Mesh> mesh_;

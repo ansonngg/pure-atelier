@@ -1,18 +1,11 @@
 #pragma once
 
-#include "Scene/Component.h"
-
 namespace DirectEcs
 {
-class TransformComponent : public Component
+class TransformComponent
 {
 public:
-    TransformComponent(
-        const std::shared_ptr<Entity>& entity,
-        Vector3 position,
-        Vector3 rotation,
-        Vector3 scale
-    );
+    TransformComponent(Vector3 position, Vector3 rotation, Vector3 scale);
 
 private:
     Vector3 position_;
