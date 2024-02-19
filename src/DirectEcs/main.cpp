@@ -15,7 +15,7 @@ int Main(HINSTANCE hInstance)
     bool useWarp = false;
 
 #ifdef _DEBUG
-    for (size_t i = 0; i < argc; ++i)
+    for (std::size_t i = 0; i < argc; ++i)
     {
         if (std::strcmp(argv[i], "-w") == 0 || std::strcmp(argv[i], "--width") == 0)
         {
@@ -40,7 +40,7 @@ int Main(HINSTANCE hInstance)
     int argc;
     wchar_t** argv = ::CommandLineToArgvW(::GetCommandLineW(), &argc);
 
-    for (size_t i = 0; i < argc; ++i)
+    for (std::size_t i = 0; i < argc; ++i)
     {
         if (::wcscmp(argv[i], L"-w") == 0 || ::wcscmp(argv[i], L"--width") == 0)
         {

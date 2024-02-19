@@ -2,11 +2,10 @@
 
 namespace DirectEcs
 {
-class ISystem
+class IComponent
 {
 public:
-    virtual ~ISystem() = default;
-    virtual void Update(double deltaSecond) = 0;
+    virtual ~IComponent() = default;
     [[nodiscard]] bool IsEnable() const;
     void SetIsEnable(bool isEnable);
 
