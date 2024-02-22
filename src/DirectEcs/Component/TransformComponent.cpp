@@ -3,9 +3,9 @@
 namespace DirectEcs
 {
 TransformComponent::TransformComponent(Vector3 position, Vector3 rotation, Vector3 scale)
-    : position_(position)
-    , rotation_(rotation)
-    , scale_(scale)
+    : m_Position(position)
+    , m_Rotation(rotation)
+    , m_Scale(scale)
 {
 }
 }

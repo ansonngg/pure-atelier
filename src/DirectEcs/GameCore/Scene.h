@@ -2,6 +2,7 @@
 
 #include "ComponentBatch.h"
 #include "ComponentContainer.h"
+#include "ISystem.h"
 
 #include "Util/Concept.h"
 #include "Util/Logger.h"
@@ -10,7 +11,6 @@ namespace DirectEcs
 {
 class Entity;
 class IComponent;
-class ISystem;
 
 class Scene : public std::enable_shared_from_this<Scene>
 {
@@ -29,11 +29,11 @@ private:
     uint32_t m_NextEntityId = 0;
 
     template<Derived<IComponent> ComponentType, typename... Args>
-    ComponentType& CreateComponent(std::shared_ptr<Entity> entity, Args&& ...args);
+    ComponentType& CreateComponent(std::shared_ptr<Entity>&& entity, Args&& ...args);
     template<Derived<IComponent> ComponentType>
     void RemoveComponent(const std::shared_ptr<Entity>& entity);
     template<Derived<IComponent> ComponentType>
-    ComponentContainer<ComponentType>& GetOrCreateComponentContainer() const;
+    ComponentContainer<ComponentType>& GetOrCreateComponentContainer();
 
     friend Entity;
 };
@@ -45,7 +45,7 @@ ComponentBatch<ComponentTypes...> Scene::Batch()
 }
 
 template<Derived<IComponent> ComponentType, typename... Args>
-ComponentType& Scene::CreateComponent(std::shared_ptr<Entity> entity, Args&& ...args)
+ComponentType& Scene::CreateComponent(std::shared_ptr<Entity>&& entity, Args&& ...args)
 {
     auto componentTypeHash = std::type_index(typeid(ComponentType));
     std::unordered_map<std::type_index, std::size_t>& componentMap = m_EntityToComponentMap[entity];
@@ -59,7 +59,7 @@ ComponentType& Scene::CreateComponent(std::shared_ptr<Entity> entity, Args&& ...
     }
 
     componentMap.emplace(componentTypeHash, componentContainer.Size());
-    return componentContainer.PushBack(ComponentType(std::forward<Args>(args)...), entity);
+    return componentContainer.PushBack(ComponentType(std::forward<Args>(args)...), std::move(entity));
 }
 
 template<Derived<IComponent> ComponentType>
@@ -89,7 +89,7 @@ void Scene::RemoveComponent(const std::shared_ptr<Entity>& entity)
 }
 
 template<Derived<IComponent> ComponentType>
-ComponentContainer<ComponentType>& Scene::GetOrCreateComponentContainer() const
+ComponentContainer<ComponentType>& Scene::GetOrCreateComponentContainer()
 {
     auto componentTypeHash = std::type_index(typeid(ComponentType));
     auto iterator = m_ComponentContainerMap.find(componentTypeHash);

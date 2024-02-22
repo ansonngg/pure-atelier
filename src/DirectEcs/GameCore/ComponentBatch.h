@@ -16,7 +16,8 @@ public:
     class Iterator
     {
     public:
-        explicit Iterator(const ComponentBatch& componentBatch);
+        explicit Iterator(const ComponentBatch& componentBatch, std::size_t index = SIZE_MAX);
+
         Iterator& operator++();
         bool operator!=(const Iterator& other) const;
         std::tuple<ComponentTypes& ...> operator*() const;
@@ -31,11 +32,11 @@ public:
         entityToComponentMap,
         const std::unordered_map<std::type_index, std::shared_ptr<IComponentContainer>>& componentContainerMap
     );
-    Iterator begin();
+    Iterator begin() const;
     Iterator end() const;
 
 private:
-    std::tuple<ComponentContainer<ComponentTypes>& ...> m_ContainerTuple;
+    std::tuple<ComponentContainer<ComponentTypes>* ...> m_ContainerTuple;
     const std::unordered_map<std::shared_ptr<Entity>, std::unordered_map<std::type_index, std::size_t>>&
         m_EntityToComponentMap;
     std::size_t m_SmallestContainerIndex = 0;
@@ -50,33 +51,31 @@ ComponentBatch<ComponentTypes...>::ComponentBatch(
 )
     : m_EntityToComponentMap(entityToComponentMap)
 {
-    std::tuple<ComponentContainer<ComponentTypes>* ...> containerPointerTuple;
     std::size_t index = 0;
 
     ([&]
     {
         m_ComponentTypeHashes[index] = std::type_index(typeid(ComponentTypes));
         auto iterator = componentContainerMap.find(m_ComponentTypeHashes[index]);
-        std::get<index++>(containerPointerTuple) = iterator == componentContainerMap.end()
+        std::get<index++>(m_ContainerTuple) = iterator == componentContainerMap.end()
             ? nullptr
             : static_cast<ComponentContainer<ComponentTypes>*>(iterator->second.get());
-    }, ...);
+    }(), ...);
 
     std::size_t containerCount = sizeof...(ComponentTypes);
     std::size_t minSize = SIZE_MAX;
 
     for (std::size_t i = 0; i < containerCount; ++i)
     {
-        auto containerPointer = std::get<i>(containerPointerTuple);
+        auto container = std::get<i>(m_ContainerTuple);
 
-        if (!containerPointer)
+        if (!container)
         {
-            m_SmallestContainerIndex = containerCount;
+            m_SmallestContainerIndex = i;
             return;
         }
 
-        std::get<i>(m_ContainerTuple) = *containerPointer;
-        std::size_t size = containerPointer->Size();
+        std::size_t size = container->Size();
 
         if (size < minSize)
         {
@@ -87,21 +86,37 @@ ComponentBatch<ComponentTypes...>::ComponentBatch(
 }
 
 template<Derived<IComponent>... ComponentTypes>
-ComponentBatch<ComponentTypes...>::Iterator::Iterator(const ComponentBatch& componentBatch)
+ComponentBatch<ComponentTypes...>::Iterator::Iterator(const ComponentBatch& componentBatch, std::size_t index)
     : m_ComponentBatch(componentBatch)
 {
-    m_ComponentIndices.fill(-1);
+    m_ComponentIndices[m_ComponentBatch.m_SmallestContainerIndex] = index;
 }
 
 template<Derived<IComponent>... ComponentTypes>
 typename ComponentBatch<ComponentTypes...>::Iterator& ComponentBatch<ComponentTypes...>::Iterator::operator++()
 {
     std::size_t mainContainerIndex = m_ComponentBatch.m_SmallestContainerIndex;
-    auto& mainContainer = std::get<mainContainerIndex>(m_ComponentBatch.m_ContainerTuple);
+    auto mainContainerPointer = std::get<mainContainerIndex>(m_ComponentBatch.m_ContainerTuple);
+
+    if (!mainContainerPointer)
+    {
+        return *this;
+    }
+
+    auto& mainContainer = *mainContainerPointer;
     std::size_t mainContainerSize = mainContainer.Size();
     std::size_t & mainComponentIndex = m_ComponentIndices[mainContainerIndex];
 
-    while (++mainComponentIndex < mainContainerSize)
+    if (mainComponentIndex == SIZE_MAX)
+    {
+        mainComponentIndex = 0;
+    }
+    else
+    {
+        ++mainComponentIndex;
+    }
+
+    while (mainComponentIndex < mainContainerSize)
     {
         std::unordered_map<std::type_index, std::size_t>& componentMap =
             m_ComponentBatch.m_EntityToComponentMap[mainContainer[mainComponentIndex].second.lock()];
@@ -129,11 +144,8 @@ typename ComponentBatch<ComponentTypes...>::Iterator& ComponentBatch<ComponentTy
         {
             break;
         }
-    }
 
-    if (mainComponentIndex == mainContainerSize)
-    {
-        m_ComponentIndices.fill(-1);
+        ++mainComponentIndex;
     }
 
     return *this;
@@ -142,7 +154,8 @@ typename ComponentBatch<ComponentTypes...>::Iterator& ComponentBatch<ComponentTy
 template<Derived<IComponent>... ComponentTypes>
 bool ComponentBatch<ComponentTypes...>::Iterator::operator!=(const Iterator& other) const
 {
-    return m_ComponentIndices[0] != other.m_ComponentIndices[0];
+    std::size_t index = m_ComponentBatch.m_SmallestContainerIndex;
+    return m_ComponentIndices[index] != other.m_ComponentIndices[index];
 }
 
 template<Derived<IComponent>... ComponentTypes>
@@ -152,21 +165,22 @@ std::tuple<ComponentTypes& ...> ComponentBatch<ComponentTypes...>::Iterator::ope
 
     for (std::size_t i = 0; i < m_ComponentIndices.size(); ++i)
     {
-        std::get<i>(result) = std::get<i>(m_ComponentBatch.m_ContainerTuple)[m_ComponentIndices[i]].first;
+        std::get<i>(result) = (*std::get<i>(m_ComponentBatch.m_ContainerTuple))[m_ComponentIndices[i]].first;
     }
 
     return result;
 }
 
 template<Derived<IComponent>... ComponentTypes>
-typename ComponentBatch<ComponentTypes...>::Iterator ComponentBatch<ComponentTypes...>::begin()
+typename ComponentBatch<ComponentTypes...>::Iterator ComponentBatch<ComponentTypes...>::begin() const
 {
-    return m_SmallestContainerIndex == sizeof...(ComponentTypes) ? end() : ++Iterator(*this);
+    return ++Iterator(*this);
 }
 
 template<Derived<IComponent>... ComponentTypes>
 typename ComponentBatch<ComponentTypes...>::Iterator ComponentBatch<ComponentTypes...>::end() const
 {
-    return Iterator(*this);
+    auto container = std::get<m_SmallestContainerIndex>(m_ContainerTuple);
+    return container ? Iterator(*this, container->Size()) : Iterator(*this);
 }
 }

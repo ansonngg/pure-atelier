@@ -25,6 +25,7 @@ void Window::Start()
 {
     ::ShowWindow(windowHandle_, SW_SHOW);
     clock_.Init();
+    m_Game.Init();
 }
 
 void Window::Destroy()

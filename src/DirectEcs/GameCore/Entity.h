@@ -2,18 +2,20 @@
 
 #include "Scene.h"
 
+#include "Util/Concept.h"
+
 namespace DirectEcs
 {
-class Component;
+class IComponent;
 
 class Entity : public std::enable_shared_from_this<Entity>
 {
 public:
     [[nodiscard]] uint32_t GetId() const;
-    template<typename ComponentType, typename... Args>
-    ComponentType& AddComponent(Args&& ...args) const;
-    template<typename ComponentType>
-    void RemoveComponent() const;
+    template<Derived<IComponent> ComponentType, typename... Args>
+    ComponentType& AddComponent(Args&& ...args);
+    template<Derived<IComponent> ComponentType>
+    void RemoveComponent();
 
 private:
     std::weak_ptr<Scene> m_Scene;
@@ -24,14 +26,14 @@ private:
     friend Scene;
 };
 
-template<typename ComponentType, typename... Args>
-ComponentType& Entity::AddComponent(Args&& ...args) const
+template<Derived<IComponent> ComponentType, typename... Args>
+ComponentType& Entity::AddComponent(Args&& ...args)
 {
     return m_Scene.lock()->CreateComponent<ComponentType>(shared_from_this(), std::forward<Args>(args)...);
 }
 
-template<typename ComponentType>
-void Entity::RemoveComponent() const
+template<Derived<IComponent> ComponentType>
+void Entity::RemoveComponent()
 {
     m_Scene.lock()->RemoveComponent<ComponentType>(shared_from_this());
 }
