@@ -1,11 +1,19 @@
+/**
+ * Copyright (c) 2024, ansonngg
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+*/
+
 #include "GraphicsDevice.h"
 
 #include "Utility/Exception.h"
 
-using Microsoft::WRL::ComPtr;
-
 namespace PureAtelier
 {
+using Microsoft::WRL::ComPtr;
+
 GraphicsDevice& GraphicsDevice::GetInstance()
 {
     static GraphicsDevice graphicsDevice;
@@ -56,14 +64,16 @@ void GraphicsDevice::CreateCommittedResource(std::size_t bufferSize, ComPtr<ID3D
     auto heapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
     auto resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
 
-    ThrowIfFailed(m_D3D12Device->CreateCommittedResource(
-        &heapProperties,
-        D3D12_HEAP_FLAG_NONE,
-        &resourceDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(&resource)
-    ));
+    ThrowIfFailed(
+        m_D3D12Device->CreateCommittedResource(
+            &heapProperties,
+            D3D12_HEAP_FLAG_NONE,
+            &resourceDesc,
+            D3D12_RESOURCE_STATE_GENERIC_READ,
+            nullptr,
+            IID_PPV_ARGS(&resource)
+        )
+    );
 }
 
 ComPtr<IDXGIAdapter4> GraphicsDevice::GetAdapter()

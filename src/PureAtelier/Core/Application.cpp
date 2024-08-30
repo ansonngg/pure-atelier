@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) 2024, ansonngg
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+*/
+
 #include "Application.h"
 
 #include "Window.h"
@@ -5,10 +13,10 @@
 #include "Graphics/GraphicsDevice.h"
 #include "Utility/Exception.h"
 
-using Microsoft::WRL::ComPtr;
-
 namespace PureAtelier
 {
+using Microsoft::WRL::ComPtr;
+
 Application& Application::GetInstance()
 {
     static Application application;
