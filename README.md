@@ -1,3 +1,3 @@
-# Direct ECS
+# Pure Atelier
 
-This is a project that uses DirectX 12 to render and ECS as the architectural pattern.
+Pure Atelier is a game engine that features DirectX 12 rendering and ECS pattern.
