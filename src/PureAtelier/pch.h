@@ -31,6 +31,7 @@
 #include <cassert>
 #include <chrono>
 #include <exception>
+#include <map>
 #include <memory>
 #include <queue>
 #include <typeindex>

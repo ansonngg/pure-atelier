@@ -19,6 +19,11 @@ public:
 
     void Initialize();
     void CreateCommittedResource(std::size_t bufferSize, Microsoft::WRL::ComPtr<ID3D12Resource>& resource);
+    void CreateDescriptorHeap(
+        const D3D12_DESCRIPTOR_HEAP_DESC& heapDesc,
+        Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap
+    );
+    [[nodiscard]] uint32_t GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE heapType) const;
 
 private:
     Microsoft::WRL::ComPtr<ID3D12Device> m_D3D12Device;

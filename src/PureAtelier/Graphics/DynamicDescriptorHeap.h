@@ -13,7 +13,7 @@ namespace PureAtelier
 class DynamicDescriptorHeap
 {
 public:
-    DynamicDescriptorHeap(
+    explicit DynamicDescriptorHeap(
         D3D12_DESCRIPTOR_HEAP_TYPE heapType,
         uint32_t unstagedDescriptorCountPerHeap = 256,
         uint32_t stagedDescriptorCountPerHeap = 1024

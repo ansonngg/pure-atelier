@@ -76,6 +76,19 @@ void GraphicsDevice::CreateCommittedResource(std::size_t bufferSize, ComPtr<ID3D
     );
 }
 
+void GraphicsDevice::CreateDescriptorHeap(
+    const D3D12_DESCRIPTOR_HEAP_DESC& heapDesc,
+    ComPtr<ID3D12DescriptorHeap>& descriptorHeap
+)
+{
+    ThrowIfFailed(m_D3D12Device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&descriptorHeap)));
+}
+
+uint32_t GraphicsDevice::GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE heapType) const
+{
+    return m_D3D12Device->GetDescriptorHandleIncrementSize(heapType);
+}
+
 ComPtr<IDXGIAdapter4> GraphicsDevice::GetAdapter()
 {
     ComPtr<IDXGIFactory4> factory;
